@@ -37,9 +37,11 @@ if (!$_GET['imgkeywords']=='') {
 	$backlinks = file_get_contents($url);
 
 	// Scarping 1: catting the piece we want
-	$pattern = 'id="mw-whatlinkshere-list"';
+	//$pattern = 'id="mw-whatlinkshere-list"';
+	$pattern = '/\<ul\ id\=\"mw\-whatlinkshere\-list\"\>/';
 	$backlinks =  explode($pattern, $backlinks);
-	$pattern = 'View (previous 50';
+	//$pattern = 'View (previous 50';
+	$pattern = '/\<\/ul\>View\ \(previous/';
 	$backlinks =  explode($pattern, $backlinks[1]);
 	// Scraping 2: cleaning
 	$pattern = '/\<span.*links.*span\>/i';
