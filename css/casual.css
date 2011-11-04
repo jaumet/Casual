@@ -1,0 +1,175 @@
+body {
+	background-color:black;
+	color:white;
+}
+
+#panel {
+	position:absolute; 
+	top:0; 
+	left:0;
+	background-color:grey;
+	visibility: visible;
+	display:block;
+	height: 55px;
+	width: 98%;
+	margin-bottom : 2px; 
+	margin-top : 4px; 
+	margin-right : 4px; 
+	margin-left : 6px;
+	padding:5px;
+	z-index:15;
+	}
+#panel {
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-	filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+
+#help {
+	position:absolute;
+	top: 150px;
+	left: 180px;
+	width: 190px;
+	height: 190px;
+	background-color:grey;
+	padding:30px;
+	z-index: 10;
+	}
+
+h2 {
+	color : #000000;
+	font-family : Verdana;
+	font-size : 10px;
+	font-style : normal;
+	}
+h1 {
+	color : #000000;
+	font-family : Verdana;
+	font-size : 13px;
+	font-style : normal;
+	}
+#divwikipedia {
+	position:absolute; 
+	top:74px; 
+	left:0px;
+	background-color:transparent;
+	display:block;
+	padding: 6px;
+	overflow: auto;
+	visibility: visible;
+	height: 93px;
+	width: 98%;
+	z-index:5;
+	}
+#rss {
+	position:absolute;  
+	top:443px; 
+	left:846px;
+	background-color:transparent;
+	display:block;
+	padding: 6px;
+	overflow: auto;
+	visibility: visible;
+	width: 250px;
+	z-index:10;
+	}
+a, li {
+	color : #ffffff;
+	font-family : Verdana;
+	font-size : 12px;
+	font-style : normal;
+	font-weight : bold;
+	text-decoration:none;
+	}
+p {
+	color : #000000;
+	font-family : Verdana;
+	font-size : 12px;
+	font-style : normal;
+	font-weight : bold;
+	text-decoration:none;
+	}
+p.wpediadef {
+	color : grey;
+	font-family : Verdana;
+	font-size : 10px;
+	font-style : normal;
+	font-weight : bold;
+	text-decoration:none;
+	}
+div.titol {
+	color : #fff;
+	font-family : Verdana;
+	font-size : 12px;
+	font-style : normal;
+	font-weight : bold;
+	text-decoration:none;
+	}
+#divwc {
+	position:absolute; 
+	#overflow:hidden;
+	top:6px; 
+	left:457px;
+	background-color:transparent;
+	display:block;
+	padding: 0px;
+	overflow: auto;
+	visibility: visible;
+	height: 30px;
+	width: 200px;
+	z-index:20;
+	}
+#divrelated {
+	position:absolute; 
+	background-color:grey;
+	display:block;
+	padding: 0px;
+	overflow: auto;
+	visibility: visible;
+	width: auto;
+	text-decoration : blink;
+	z-index:20;
+	}
+
+	a:active, a:hover {
+	font-size : 20px;
+	background-color : grey;
+	}
+	
+
+	a.color0 {
+	color: white;
+	}
+	a.color1 {
+	color: red;
+	}
+	a.color2 {
+	color: green;
+	}
+	a.color3 {
+	color:yellow;
+	}
+	a.color4 {
+	color: blue;
+	}
+	a.color4 {
+	color: cyan;
+	}
+	a.color4 {
+	color: grey;
+	}
+	
+	#myCanvas {
+		background-color:#000000;
+		border:0px solid red;
+	}
+	
+	#myCanvas li, #myCanvas a {
+		margin-bottom:10px;
+		border:2px solid green;
+	}
