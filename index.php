@@ -6,7 +6,7 @@ include('lib/functions.php');
 // per a configurar:
 $default_lang = "en";
 $default_query = "lalalala lalallala";
-$casual_url = "http://localhost/casual/index.php";
+$casual_url = "http://nualart.com/casual/index.php";
 
 session_start();
 // Use $HTTP_SESSION_VARS with PHP 4.0.6 or less
@@ -37,11 +37,11 @@ if (!$_GET['imgkeywords']=='') {
 	$backlinks = file_get_contents($url);
 
 	// Scarping 1: catting the piece we want
-	//$pattern = 'id="mw-whatlinkshere-list"';
-	$pattern = '/\<ul\ id\=\"mw\-whatlinkshere\-list\"\>/';
+	$pattern = 'id="mw-whatlinkshere-list"';
+	//$pattern = '/\<ul\ id\=\"mw\-whatlinkshere\-list\"\>/';
 	$backlinks =  explode($pattern, $backlinks);
 	//$pattern = 'View (previous 50';
-	$pattern = '/\<\/ul\>View\ \(previous/';
+	$pattern = 'View (previous';
 	$backlinks =  explode($pattern, $backlinks[1]);
 	// Scraping 2: cleaning
 	$pattern = '/\<span.*links.*span\>/i';
@@ -62,10 +62,10 @@ echo html('casualform', '');
 if (!$_GET['imgkeywords']=='') {
 	echo html('canvas', $backlinks);
 	// Debug
-	$url2 = 'http://'.$_GET['lang'].'.wikipedia.org/wiki/'.$_GET['imgkeywords'];
-	echo '<hr /><div>a la wikipedia: <a href="'.$url2.'" target="_nova">'.$url2.'</a></div><hr />';
+//	$url2 = 'http://'.$_GET['lang'].'.wikipedia.org/wiki/'.$_GET['imgkeywords'];
+//	echo '<hr /><div>a la wikipedia: <a href="'.$url2.'" target="_nova">'.$url2.'</a></div><hr />';
 	//echo "links: <pre>".$backlinks."</pre>";
-	echo '<br />wiki api link: <a href="'.$url.'">'.$url.'</a>';
+//	echo '<br />wiki api link: <a href="'.$url.'">'.$url.'</a>';
 } else {
 	echo html('help', '');
 }

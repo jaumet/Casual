@@ -7,7 +7,7 @@ switch ($piece)
 	case 'casualform':
 		$output = <<<FORM
 		<div id="panel" class="titol">
-<div class="titol"><a href="index.php"><img src="./images/casual.png" height="25px" border="0px" align="top" alt="welcome to casual" /></a> Welcome - This is absolutely Casual</div>
+<div class="titol"><a href="index.php"><img src="./images/casual.png" height="25px" border="0px" align="top" alt="welcome to casual" /></a> Welcome back - This is absolutely Casual (100% new code - alpha version - <a href="https://github.com/jaumet/Casual" target="_githubcasual">github</a>)</div>
 <form method="GET" action="" id="casualform" name="casualform">
 	keyword: 
 	<input type="text" name="imgkeywords" id="imgkeywords" size="10" maxlength="50" alt="write your query" align="left" value="
@@ -127,7 +127,7 @@ FORM1;
 				maxSpeed: 0.01,
 				minBrightness: 0.6,
 				zoom: 1.3,
-				outlineColour: "red",
+				outlineColour: "#FF9F00",
 				initial: [0.02,0.02],
 				shadow: 'white',
 				shadowBlur: 2
