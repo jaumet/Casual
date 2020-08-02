@@ -5,8 +5,8 @@
 include('lib/functions.php');
 // per a configurar:
 $default_lang = "en";
-$default_query = "lalalala lalallala";
-$casual_url = "http://nualart.com/casual/index.php";
+$default_query = "linux";
+$casual_url = "./index.php";
 
 session_start();
 // Use $HTTP_SESSION_VARS with PHP 4.0.6 or less
@@ -36,7 +36,7 @@ if (!$_GET['imgkeywords']=='') {
 
 	$backlinks = file_get_contents($url);
 
-	// Scarping 1: catting the piece we want
+	// Scarping 1: cutting the piece we want
 	$pattern = 'id="mw-whatlinkshere-list"';
 	//$pattern = '/\<ul\ id\=\"mw\-whatlinkshere\-list\"\>/';
 	$backlinks =  explode($pattern, $backlinks);
