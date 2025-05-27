@@ -1,5 +1,168 @@
 <?php
 
+// Function to generate the HTML head section
+function generate_html_head() {
+	// TagCanvas options are defined directly here for simplicity
+	$options_json = json_encode([
+		'textColour' => 'white',
+		'textHeight' => 20,
+		'decel' => 0,
+		'freezeActive' => true,
+		'depth' => 0.99,
+		'minSpeed' => 0.01,
+		'maxSpeed' => 0.01,
+		'minBrightness' => 0.6,
+		'zoom' => 1.3,
+		'outlineColour' => "#FF9F00",
+		'initial' => [0.02,0.02],
+		'shadow' => 'white',
+		'shadowBlur' => 2
+	]);
+
+	$output = <<<HEAD
+<html>
+<head>
+	<title>- Casual visualization and concept landscapes -</title>
+	<meta name="keywords" content="casual visualization, concept landsacapes, multiviewsalization, tagcloud, contents concentrator" />
+	<META NAME="ROBOTS" CONTENT="NOINDEX"> 
+	<meta name="description" content="Under the name Casual I am including a set of web scripts that drive us to the idea of random realities, creating a unique media contents landscape on demand. With Casual you can visualize and browse indexed and semantic multi-media contents. Casual is a kind of black hole for the contents that you want to get." />
+	<meta name="robots" content="all" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/casual	.css" />
+	<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+	<script src="js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="js/jquery.tagcanvas.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	// configuration options (see: http://www.goat1000.com/tagcanvas.php)
+			var options = $options_json;
+ 
+		window.onload = function() {
+		  try {
+		    TagCanvas.Start('myCanvas', '', options);
+		    
+		  } catch(e) {
+		    // in Internet Explorer there is no canvas!
+		    document.getElementById('myCanvas').style.display = 'none';
+		  }
+		};
+	</script>
+</head>
+HEAD;
+	return $output;
+}
+
+// Function to generate the Casual form
+function generate_casual_form($current_query, $current_lang, $current_number) {
+	// Ensure values are properly escaped for HTML attributes
+	$current_query_escaped = htmlspecialchars($current_query, ENT_QUOTES, 'UTF-8');
+
+	// Language options
+	$languages = [
+		"en" => "English", "ca" => "Catal&#224;", "ar" => "Arab", "id" => "Bahasa Ind",
+		"bn" => "Bangl&#228;", "bs" => "Bosnian", "bg" => "Bulgarian", "cs" => "Czech",
+		"zh" => "Chinese", "da" => "Danish", "de" => "Deutsch", "ee" => "Eesti",
+		"es" => "Espa&#241;ol", "eo" => "Esperanto", "fa" => "Farsi", "fr" => "Fran&#231;ais",
+		"el" => "Greek", "he" => "'Ivrit", "it" => "Italiano", "ja" => "Japanish",
+		"ko" => "Korean", "nl" => "Nederlands", "nn" => "Nynorsk", "no" => "Bokm&#234;l",
+		"pl" => "Poski", "pt" => "Portugu&#234;s", "ru" => "Russian", "sr" => "Servocroatian",
+		"sl" => "Sloven&#353;&#269;ina", "fi" => "Suomi", "sv" => "Svenska", "te" => "Telugu",
+		"th" => "Thai", "uk" => "Ukra&#239;ns'ka"
+	];
+	$lang_options_html = "";
+	foreach ($languages as $code => $name) {
+		$selected = ($code == $current_lang) ? " selected=\"selected\"" : "";
+		$lang_options_html .= "<option value=\"$code\"$selected>$name</option>\n";
+	}
+
+	// Number options
+	$number_values = ["10", "50", "100", "200", "400"];
+	$number_options_html = "";
+	foreach ($number_values as $val) {
+		$selected = ($val == $current_number) ? " selected=\"selected\"" : "";
+		$number_options_html .= "<option value=\"$val\"$selected>$val</option>\n";
+	}
+	
+	$output = <<<FORM
+	<div id="panel" class="titol">
+<div class="titol"><a href="index.php"><img src="./images/casual.png" height="25px" border="0px" align="top" alt="welcome to casual" /></a> Welcome back - This is absolutely Casual (100% new code - alpha version - <a href="https://github.com/jaumet/Casual" target="_githubcasual">github</a>)</div>
+<form method="GET" action="" id="casualform" name="casualform">
+	keyword: 
+	<input type="text" name="imgkeywords" id="imgkeywords" size="10" maxlength="50" alt="write your query" align="left" value="$current_query_escaped"/>
+ 
+	<select name="lang" id="lang">
+		$lang_options_html
+	</select>
+
+<!--
+	<select name="imgsrc" id="imgsrc" style="width: 100px">
+
+		<option value="res">All images</option>
+		<option value="flickr">flickr.com</option>
+		<option value="imc">All Indymedias</option>
+		<option value="imcbcn">Indymedia Barcelona</option>
+		<option value="imcestrecho">Indymedia Estrecho</option>
+		<option value="last.fm">last.fm</option>
+		<option value="altermundo">Altermundo</option>
+		<option value="euromovements">Euromovements.net</option> 
+		<option value="straddle3">straddle3.net</option>
+		<option value="riereta">riereta.net</option>
+	</select>
+-->
+<!--
+	Num img?
+	<select name="imgnum" id="imgnum">
+		<option value="1">1</option>
+		<option value="5">5</option>
+		<option value="10" selected="selected">10</option>
+		<option value="20">20</option>
+		<option value="30">30</option>
+	</select>   
+--> 
+	how many?
+	<select name="number" id="number">
+		$number_options_html
+	</select>   
+	<input type="submit" value="casualize me">
+	</form></div>
+FORM;
+	return $output;
+}
+
+// Function to generate the help section
+function generate_help_section() {
+	$output = '<div id="help">
+		<h1>Welcome,<br /> this is <span style="color:red">Casual</span>, a non-hierarchical conceptual landscapes generator. Just search for a concept or common word and you\'ll get a unique cloud of concepts. Please, see the <a href="help.html">help</a> page to know all the features of Casual</h1>
+	</div>';
+	return $output;
+}
+
+// Function to generate the canvas section
+function generate_canvas_section($backlinks_html_list) {
+	$output = <<<CANVAS
+	<canvas width="1600" height="800" id="myCanvas">
+	  <p>Anything in here will be replaced on browsers that support the canvas element</p>
+	  <ul>
+CANVAS;
+	$output .= $backlinks_html_list."			
+	  </ul>
+	</canvas>";
+	return $output;
+}
+
+// Function to generate the HTML footer
+function generate_html_footer() {
+	// The JavaScript related to $("lang").change() has been removed as its
+	// functionality was unclear and it relied on an uninitialized $ex variable
+	// in the refactored context, or a hardcoded 'ar' with no clear purpose.
+	$output = <<<FOOTER
+	</body>
+	</html>
+FOOTER;
+	return $output;
+}
+
+/*
+// Old html() function - commented out or to be removed
 function html($piece, $extra) {
 
 switch ($piece)
@@ -12,7 +175,7 @@ switch ($piece)
 	keyword: 
 	<input type="text" name="imgkeywords" id="imgkeywords" size="10" maxlength="50" alt="write your query" align="left" value="
 FORM;
-	$output .= $_GET['imgkeywords'];
+	$output .= $_GET['imgkeywords']; // This was unsafe, direct GET output
 	$output .= <<<FORM1
 	"/>
  
@@ -53,31 +216,6 @@ FORM;
 		<option value="uk">Ukra&#239;ns'ka</option>
 	</select>
 
-<!--
-	<select name="imgsrc" id="imgsrc" style="width: 100px">
-
-		<option value="res">All images</option>
-		<option value="flickr">flickr.com</option>
-		<option value="imc">All Indymedias</option>
-		<option value="imcbcn">Indymedia Barcelona</option>
-		<option value="imcestrecho">Indymedia Estrecho</option>
-		<option value="last.fm">last.fm</option>
-		<option value="altermundo">Altermundo</option>
-		<option value="euromovements">Euromovements.net</option> 
-		<option value="straddle3">straddle3.net</option>
-		<option value="riereta">riereta.net</option>
-	</select>
--->
-<!--
-	Num img?
-	<select name="imgnum" id="imgnum">
-		<option value="1">1</option>
-		<option value="5">5</option>
-		<option value="10" selected="selected">10</option>
-		<option value="20">20</option>
-		<option value="30">30</option>
-	</select>   
---> 
 	how many?
 	<select name="number" id="number">
 		<option value="10">10</option>
@@ -110,11 +248,10 @@ FORM1;
 	<meta name="robots" content="all" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="css/casual	.css" />
-	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
-	<script src="js/tagcanvas.js" type="text/javascript"></script>
-	<!--[if lt IE 9]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
-	<script src="js/jquery-1.6.4.min.js" type="text/javascript"></script>
-	<script src="js/jquery.tagcanvas.js" type="text/javascript"></script>
+	<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+	<script src="js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="js/jquery.tagcanvas.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	// configuration options (see: http://www.goat1000.com/tagcanvas.php)
 			var options = {
@@ -182,4 +319,5 @@ CANVAS;
 }
 return $output;
 }
+*/
 ?>
