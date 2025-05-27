@@ -17,58 +17,113 @@ if (!isset($_SESSION['count'])) {
   //$_SESSION['query'] = $default_query;
 } else {
   $_SESSION['count']++;
-  if (!$_SESSION['imgkeywords'] != $_GET['imgkeywords'] || $_SESSION['lang'] != $_GET['lang'])  {
-  	$_SESSION = $_GET;	  	
+  // Ensure $_GET parameters are checked with isset or empty before use
+  $get_imgkeywords = isset($_GET['imgkeywords']) ? $_GET['imgkeywords'] : '';
+  $get_lang = isset($_GET['lang']) ? $_GET['lang'] : $default_lang;
+  $session_imgkeywords = isset($_SESSION['imgkeywords']) ? $_SESSION['imgkeywords'] : '';
+  $session_lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : $default_lang;
+
+  if ($session_imgkeywords != $get_imgkeywords || $session_lang != $get_lang)  {
+    // Avoid directly assigning $_GET to $_SESSION for security; cherry-pick needed values.
+    $_SESSION['imgkeywords'] = $get_imgkeywords;
+    $_SESSION['lang'] = $get_lang;
+    $_SESSION['number'] = isset($_GET['number']) ? $_GET['number'] : '100'; // Default '100'
   }
 }
-if (!$_GET['imgkeywords']=='') {
 
-	// Cleaning SPACES in the main query
-	//$query = str_replace(" ", "+", strtolower($_GET['imgkeywords']));
-	$query = str_replace(" ", "+", $_GET['imgkeywords']);
+$api_error_message = null; // Initialize error message variable
+$backlinksHtml = ''; // Initialize backlinks HTML
 
-	// Set user agent in order to not get 503 forbidden with file_get_contents() PHP function
-	ini_set( 'user_agent', 'casual visualization (nualart.cat/casual)' );
+$current_query_get = isset($_GET['imgkeywords']) ? $_GET['imgkeywords'] : '';
+$current_lang_get = isset($_GET['lang']) ? $_GET['lang'] : $default_lang;
+$current_number_get = isset($_GET['number']) ? $_GET['number'] : '100';
 
-	// Scraping wikipedia WhatsLinkHere pages
-	$url ='http://'.$_GET['lang'].'.wikipedia.org/w/index.php?title=Special%3AWhatLinksHere&target='.$query.'&namespace=0&lang='.$_GET['lang'].'&limit='.$_GET['number'];
-	$urldef = '';
 
-	$backlinks = file_get_contents($url);
+if (!empty($current_query_get)) {
+    $query = str_replace(" ", "+", $current_query_get);
+    $lang_for_api = $current_lang_get;
+    $number_for_api = $current_number_get;
 
-	// Scarping 1: cutting the piece we want
-	$pattern = 'id="mw-whatlinkshere-list"';
-	//$pattern = '/\<ul\ id\=\"mw\-whatlinkshere\-list\"\>/';
-	$backlinks =  explode($pattern, $backlinks);
-	//$pattern = 'View (previous 50';
-	$pattern = 'View (previous';
-	$backlinks =  explode($pattern, $backlinks[1]);
-	// Scraping 2: cleaning
-	$pattern = '/\<span.*links.*span\>/i';
-	$backlinks = preg_replace($pattern, '', $backlinks[0]);
-	// Scraping 3: adapting wpdia URL to casual URL
-	$pattern = '/href\=\"\/wiki\//i';
-	$replacement = 'href="'.$casual_url.'?number='.$_GET['number'].'&lang='.$_GET['lang'].'&imgkeywords=';
-	$backlinks = preg_replace($pattern, $replacement, $backlinks);
+    // Set user agent
+    $userAgent = 'casual visualization (nualart.cat/casual)';
+
+    // Construct MediaWiki API URL
+    $apiUrl = 'https://'.$lang_for_api.'.wikipedia.org/w/api.php?' . http_build_query([
+        'action' => 'query',
+        'list' => 'backlinks',
+        'bltitle' => $query,
+        'bllimit' => $number_for_api,
+        'blnamespace' => 0,
+        'format' => 'json',
+        // 'formatversion' => 2 // formatversion=2 gives simpler output, but error example uses non-2
+    ]);
+
+    // Initialize cURL
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+
+    // Execute cURL request
+    $response = curl_exec($ch);
+    
+    if ($response === false) {
+        $curl_error_msg = curl_error($ch);
+        $api_error_message = "Error connecting to Wikipedia API: " . htmlspecialchars($curl_error_msg) . " (cURL Error Code: " . curl_errno($ch) . ")";
+    } else {
+        // Use false for $assoc for object access as per error example, but formatversion=2 (removed for now) is better with assoc true
+        $decoded_response = json_decode($response); 
+        
+        if ($decoded_response === null && json_last_error() !== JSON_ERROR_NONE) {
+            $api_error_message = "Error parsing Wikipedia API response. Please try again. JSON Error: " . htmlspecialchars(json_last_error_msg());
+        } elseif (isset($decoded_response->error)) {
+            $error_code = isset($decoded_response->error->code) ? htmlspecialchars($decoded_response->error->code) : 'N/A';
+            $error_info = isset($decoded_response->error->info) ? htmlspecialchars($decoded_response->error->info) : 'No additional information.';
+            $api_error_message = "Wikipedia API Error: (" . $error_code . ") " . $error_info;
+        } elseif (empty($decoded_response->query->backlinks)) {
+            $api_error_message = "No pages found linking to '" . htmlspecialchars($current_query_get) . "' on " . htmlspecialchars($lang_for_api) . " Wikipedia.";
+        } else {
+            $backlinks_items = [];
+            foreach ($decoded_response->query->backlinks as $link) {
+                // API formatversion=2 uses $link['title'], default format uses $link->title
+                $page_title = isset($link->title) ? $link->title : (isset($link['title']) ? $link['title'] : 'Unknown Title');
+                $page_title_encoded = urlencode($page_title);
+                $casual_link = $casual_url . '?number=' . htmlspecialchars($number_for_api) . '&lang=' . htmlspecialchars($lang_for_api) . '&imgkeywords=' . $page_title_encoded;
+                $backlinks_items[] = '<li><a href="' . $casual_link . '">' . htmlspecialchars($page_title) . '</a></li>';
+            }
+            $backlinksHtml = "<ul>\n" . implode("\n", $backlinks_items) . "\n</ul>";
+        }
+    }
+    curl_close($ch);
 }
 
 /////////////////////////
 // HTML start here     
 /////////////////////////
 
-echo html('head', '');
+echo generate_html_head();
 echo "\n<body>\n";
-echo html('casualform', '');
-if (!$_GET['imgkeywords']=='') {
-	echo html('canvas', $backlinks);
-	// Debug
-//	$url2 = 'http://'.$_GET['lang'].'.wikipedia.org/wiki/'.$_GET['imgkeywords'];
-//	echo '<hr /><div>a la wikipedia: <a href="'.$url2.'" target="_nova">'.$url2.'</a></div><hr />';
-	//echo "links: <pre>".$backlinks."</pre>";
-//	echo '<br />wiki api link: <a href="'.$url.'">'.$url.'</a>';
-} else {
-	echo html('help', '');
+
+// Set default values for form parameters for generate_casual_form
+$query_form_val = !empty($current_query_get) ? $current_query_get : $default_query;
+$lang_form_val = $current_lang_get; // Already defaults to $default_lang if not in GET
+$number_form_val = $current_number_get; // Already defaults to '100' if not in GET
+
+echo generate_casual_form($query_form_val, $lang_form_val, $number_form_val);
+
+if ($api_error_message !== null) {
+    echo '<div id="apierror" style="color: red; text-align: center; padding: 20px; border: 1px solid red; margin: 10px;">' . $api_error_message . '</div>';
+} elseif (!empty($backlinksHtml)) {
+    echo generate_canvas_section($backlinksHtml);
+} elseif (empty($current_query_get)) { // Only show help if no query was attempted and no error from a previous attempt
+    echo generate_help_section();
 }
+	// Debug
+//	$url2 = 'http://'.$current_lang_get.'.wikipedia.org/wiki/'.urlencode($current_query_get);
+//	echo '<hr /><div>a la wikipedia: <a href="'.$url2.'" target="_nova">'.$url2.'</a></div><hr />';
+//	if(!empty($backlinksHtml)) echo "links: <pre>".$backlinksHtml."</pre>"; 
+//	if(!empty($apiUrl)) echo '<br />MediaWiki API URL: <a href="'.$apiUrl.'">'.$apiUrl.'</a>';
+
 // Closing HTML
-echo html('footer', '');
+echo generate_html_footer();
 ?>
