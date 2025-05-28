@@ -1,0 +1,155 @@
+/* Overall Page Styling */
+body {
+    background-color: #212529; /* Bootstrap dark background color */
+    color: #f8f9fa; /* Bootstrap light text color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern sans-serif font */
+    margin-top: 20px;
+}
+
+.container {
+    background-color: #343a40; /* Slightly lighter dark background for container */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Header Styling */
+h1 {
+    color: #0d6efd; /* Bootstrap primary color for emphasis */
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+/* Form Styling */
+#casualForm {
+    margin-bottom: 30px;
+    /* position: relative; /* Set if suggestionsDiv is appended directly to form */
+}
+
+/* Ensure the parent of keywordInput has position: relative for autocomplete suggestions.
+   This is handled in JS by setting keywordInput.parentNode.style.position = 'relative';
+   Alternatively, if keywordInput is always in a div.mb-3, we can style that: */
+/*
+.mb-3 {
+    position: relative; 
+}
+*/
+
+#casualForm .form-label {
+    color: #adb5bd; /* Lighter text for labels */
+}
+
+#casualForm .form-control,
+#casualForm .form-select {
+    background-color: #495057; /* Darker background for inputs */
+    color: #f8f9fa; /* Light text for inputs */
+    border: 1px solid #6c757d; /* Subtle border */
+}
+
+#casualForm .form-control:focus,
+#casualForm .form-select:focus {
+    background-color: #5a6268;
+    color: #f8f9fa;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Focus shadow to match Bootstrap */
+}
+
+/* Change placeholder text color for dark input fields */
+#casualForm .form-control::placeholder {
+    color: #adb5bd;
+    opacity: 1; /* Firefox */
+}
+
+#casualForm .form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #adb5bd;
+}
+
+#casualForm .form-control::-ms-input-placeholder { /* Microsoft Edge */
+    color: #adb5bd;
+}
+
+#casualForm .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    font-weight: bold;
+}
+
+#casualForm .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Keyword Path Display Styling */
+#keywordPathDisplay {
+    color: #adb5bd; /* A light gray */
+    font-size: 0.9em;
+    text-align: center; 
+    min-height: 1.5em; /* Ensure it takes up space even if empty initially */
+    margin-bottom: 1rem; /* Consistent with Bootstrap's mb-3 */
+}
+
+/* Autocomplete Suggestions Styling */
+#autocomplete-suggestions {
+    position: absolute;
+    border: 1px solid #555;
+    background-color: #333; /* Dark theme background */
+    z-index: 1000;
+    /* The width is set relative to the parent of keywordInput, which is a div.mb-3.
+       Bootstrap's .form-control by default takes 100% width of its parent.
+       So, 100% width for suggestions should align well. */
+    width: 100%; 
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* Hidden by default */
+    border-top: none; /* Avoid double border with input field */
+    box-sizing: border-box; /* Ensure padding and border are included in width/height */
+    left: 0; /* Align with left edge of parent */
+    /* top: 100%; /* Position below the input field; might need adjustment based on parent's padding/margins */
+}
+
+#autocomplete-suggestions div {
+    padding: 8px;
+    color: #f0f0f0; /* Light text */
+    cursor: pointer;
+}
+
+#autocomplete-suggestions div:hover {
+    background-color: #444;
+}
+
+
+/* Canvas Area Styling */
+#myCanvas {
+    background-color: #000000; /* Black background for the canvas, as in original */
+    border: 1px solid #0d6efd; /* Primary color border */
+    border-radius: 4px;
+    display: block; /* Ensure it takes up the full width available if needed */
+    margin: 0 auto; /* Center the canvas if its width is less than container */
+    max-width: 100%; /* Ensure responsiveness */
+}
+
+/* Styling for messages on the canvas (e.g., error messages, no results) */
+#myCanvas p {
+    color: #f8f9fa; /* Light text for messages */
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+}
+
+/* Links within TagCanvas should inherit color or be styled by TagCanvas itself.
+   This is a fallback if TagCanvas doesn't override it. */
+#myCanvas a {
+    color: #f8f9fa; /* Default light color for links, TagCanvas will likely override */
+}
+
+#myCanvas a:hover {
+    color: #0d6efd; /* Hover color for links, TagCanvas might override */
+}
+
+/* Ensure the fallback message for browsers not supporting canvas is styled */
+#myCanvas canvas + p { /* This targets the <p> immediately following the <canvas> if canvas is not supported */
+    color: #f8f9fa;
+    text-align: center;
+    margin-top: 20px;
+}
