@@ -76,6 +76,15 @@
             <button type="submit" id="submitButton" class="btn btn-primary">Casualize Me</button>
         </form>
         <div id="keywordPathDisplay" class="mt-3 mb-3"></div> <!-- New div for path -->
+        <!-- Wikipath Game Area -->
+        <div id="wikipathGameArea" class="mt-3 mb-3 text-center">
+            <button id="startGameButton" class="btn btn-success mb-2">START WIKIPATH GAME</button>
+            <div id="wikipathInfo" style="display: none;"> <!-- Initially hidden, shown when game starts -->
+                <p class="mb-1">Start: <strong id="startPageDisplay">-</strong></p>
+                <p class="mb-1">Target: <strong id="targetPageDisplay">-</strong></p>
+                <p>Hops: <strong id="hopCounterDisplay">0</strong></p>
+            </div>
+        </div>
         <canvas id="myCanvas" width="800" height="600">
             <p>Unfortunately, your browser does not support HTML5 canvas. Please upgrade your browser to view this content.</p>
         </canvas>
@@ -114,6 +123,22 @@
                     </ul>
 
                     <p class="mt-4"><em>This client-side version of Casual focuses on generating tag clouds from Wikipedia data. Some features from the original server-side version (like image integration, definitions, etc.) are not present in this iteration.</em></p>
+                    
+                    <hr>
+                    <h4>Wikipath Game</h4>
+                    <p>Test your Wikipedia navigation skills! The goal is to get from a random starting Wikipedia page to a random target Wikipedia page using the Casual interface.</p>
+                    <ul>
+                        <li><strong>Starting the Game:</strong> Click the "START WIKIPATH GAME" button.</li>
+                        <li><strong>Game Info:</strong>
+                            <ul>
+                                <li><strong>Start:</strong> The Wikipedia page title where your journey begins.</li>
+                                <li><strong>Target:</strong> The Wikipedia page title you need to reach.</li>
+                                <li><strong>Hops:</strong> The number of pages you've visited since starting. The first page is 0 hops.</li>
+                            </ul>
+                        </li>
+                        <li><strong>How to Play:</strong> Use the tag cloud or the search bar to navigate to new pages. Each distinct page you navigate to will increment your hop count.</li>
+                        <li><strong>Winning:</strong> The game is won when your current page title matches the target page title. Good luck!</li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

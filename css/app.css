@@ -118,6 +118,15 @@ h1 {
     background-color: #444;
 }
 
+/* Wikipath Game Area Styling */
+#wikipathGameArea p {
+    color: #f8f9fa; /* Light text for dark theme, consistent with body */
+}
+
+#wikipathGameArea strong {
+    color: #0d6efd; /* Bootstrap primary color for emphasis */
+}
+
 
 /* Canvas Area Styling */
 #myCanvas {
